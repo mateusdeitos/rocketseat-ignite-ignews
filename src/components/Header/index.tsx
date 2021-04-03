@@ -1,4 +1,5 @@
 import React from 'react';
+import ActiveLink from '../ActiveLink';
 import { SignInButton } from '../SignInButton';
 import styles from './styles.module.scss';
 export const Header = () => {
@@ -7,8 +8,12 @@ export const Header = () => {
             <div className={styles.headerContent}>
                 <img src="/images/logo.svg" alt="ig.news" />
                 <nav>
-                    <a className={styles.active}>Home</a>
-                    <a>Posts</a>
+                    <ActiveLink href="/" activeClassName={styles.active}>
+                        <a>Home</a>
+                    </ActiveLink>
+                    <ActiveLink prefetch href="/posts" activeClassName={styles.active}>
+                        <a>Posts</a>
+                    </ActiveLink>
                 </nav>
                 <SignInButton />
             </div>
