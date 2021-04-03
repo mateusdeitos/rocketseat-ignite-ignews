@@ -1,5 +1,5 @@
 import { ptBR } from "date-fns/locale";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useSession } from "next-auth/client";
 import { format } from "date-fns";
 import { RichText } from "prismic-dom";
@@ -56,9 +56,11 @@ const Post = ({ post }: PostProps) => {
     )
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        paths: [],
+        paths: [
+            { params: { slug: "como-renomear-varios-arquivos-de-uma-vez-usando-o-terminal" } }
+        ],
         fallback: 'blocking',
     }
 }
@@ -77,7 +79,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
                 content: RichText.asHtml(response.data.content.splice(0, 3)),
                 updatedAt: format(new Date(response.last_publication_date), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
             }
-        }
+        },
+        revalidate: 60 * 30,
     }
 
 }
