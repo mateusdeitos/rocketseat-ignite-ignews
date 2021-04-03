@@ -7,6 +7,7 @@ import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
 import { format, Locale } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import Link from 'next/link';
 
 type Post = {
     slug: string;
@@ -28,11 +29,13 @@ const Posts = ({ posts }: PostsProps) => {
             <main className={styles.container}>
                 <div className={styles.posts}>
                     {posts.map(post => (
-                        <a key={post.slug}>
-                            <time>{post.updatedAt}</time>
-                            <strong>{post.title}</strong>
-                            <p>{post.excerpt}</p>
-                        </a>
+                        <Link key={post.slug} href={`/posts/${post.slug}`}>
+                            <a>
+                                <time>{post.updatedAt}</time>
+                                <strong>{post.title}</strong>
+                                <p>{post.excerpt}</p>
+                            </a>
+                        </Link>
                     ))}
                 </div>
             </main>
@@ -53,7 +56,7 @@ export const getStaticProps: GetStaticProps = async () => {
     )
 
     const posts = response.results.map(post => ({
-        slug: post.id,
+        slug: post.uid,
         title: RichText.asText(post.data.title),
         excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? "",
         updatedAt: format(new Date(post.last_publication_date), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
